@@ -6,6 +6,9 @@
 #include <QMenu>
 #include <QAction>
 #include <QDesktopServices>
+#include <QMessageBox>
+#include <QUrl>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -331,32 +334,42 @@ void MainWindow::initMenuBar()
     QMenu *toolsMenu = menuBar->addMenu("驱动");
     QAction *installDriverAction = toolsMenu->addAction("安装驱动");
     connect(installDriverAction, &QAction::triggered, this, &MainWindow::on_installDriverAction_triggered);
+
+    QMenu *moreMenu = menuBar->addMenu("更多");
+    QAction *installRom = moreMenu->addAction("固件获取");
+    connect(installRom, &QAction::triggered, this, &MainWindow::on_installRom);
 }
 
 void MainWindow::on_installDriverAction_triggered()
 {
-    // 创建系统版本选择对话框
     QMessageBox msgBox(this);
     msgBox.setWindowTitle("选择系统版本");
     msgBox.setText("请选择你的Windows系统版本：");
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-
-    // 设置按钮文本
     msgBox.button(QMessageBox::Yes)->setText("Windows 10 或更高");
     msgBox.button(QMessageBox::No)->setText("Windows 7/8");
     msgBox.button(QMessageBox::Cancel)->setText("取消");
 
-    // 显示对话框并获取用户选择
     int result = msgBox.exec();
-
-    // 根据用户选择执行相应操作
     if (result == QMessageBox::Yes) {
-        // 用户选择Windows 10或更高版本，打开浏览器跳转到指定URL
         QDesktopServices::openUrl(QUrl("https://zhuanlan.zhihu.com/p/366904302"));
     } else if (result == QMessageBox::No) {
-        // 用户选择Windows 7/8，显示不支持的提示
         QMessageBox::information(this, "提示",
                                  "Windows 7/8系统可能无法正常安装驱动，请升级到Windows 10或更高版本。");
     }
-    // 用户选择取消则不执行任何操作
+}
+
+void MainWindow::on_installRom()
+{
+    qDebug()<<"1`11";
+    QMessageBox msgBox(this);
+    msgBox.setWindowTitle("固件获取");
+    msgBox.setText("⚠️ 刷机有风险，请提前做好备份！！！");
+    msgBox.setInformativeText(
+        "你可以在以前的链接获取Rom刷机包：\n"
+        "https://zhuanlan.zhihu.com/p/366904302"
+        );
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    // msgBox.setIcon(QMessageBox::Warning);
+    msgBox.exec(); // 阻塞显示对话框
 }

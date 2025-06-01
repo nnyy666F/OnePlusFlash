@@ -39,6 +39,7 @@ private slots:
     void handleProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void checkDeviceConnection();
     void on_installDriverAction_triggered();
+    void on_installRom();
 
 private:
     Ui::MainWindow *ui;
